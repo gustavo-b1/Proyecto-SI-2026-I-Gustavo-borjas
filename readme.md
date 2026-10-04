@@ -60,7 +60,7 @@ requisitos para ejecución:
 
 
 instalar node.js
-buscar el archivo de entorno en noticiero-backend .env.example y nómbrelo .env abrir el archivo y configurar JWT_SECRET y PORT
+buscar el archivo de entorno en noticiero-backend .env.example y nómbrelo .env abrir el archivo y configurar JWT_SECRET, PORT, ADMIN_EMAIL, ADMIN_PASSWORD
 abrir cmd ubicarse en la carpeta del servidor cd ruta/hacia/noticiero-backend 
 descargar dependencias del proyecto
 npm install
