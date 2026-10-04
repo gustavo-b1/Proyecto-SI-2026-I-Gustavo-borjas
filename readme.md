@@ -80,7 +80,7 @@ Pruebas
 
 Pruebas de autenticación: Verificación de registro con correos únicos, login con credenciales válidas e invalidación de token al cerrar sesión.
 Pruebas de control de acceso: Comprobación del bloqueo inmediato mediante middleware y restricción en interfaz ante intentos de un usuario con rol Lector de ingresar a los paneles de redacción o moderación editorial.
-Pruebas de rendimiento: Medición del tiempo de respuesta en la carga inicial de la portada y consulta de noticias locales, garantizando entregas fluidas en menos de 200 ms.
+Pruebas de rendimiento: Medición de la eficiencia y tiempos de procesamiento local en memoria (consultas a la base de datos y serialización de noticias locales), garantizando ejecuciones internas fluidas en menos de 100 ms sin la sobrecarga de la capa de transporte HTTP.
 Pruebas de seguridad de credenciales: Validación del almacenamiento y protección de contraseñas mediante hashing unidireccional con Bcrypt, verificando la ausencia total de texto plano en la base de datos.
 
 
