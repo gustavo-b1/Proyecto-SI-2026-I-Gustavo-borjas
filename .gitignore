@@ -1,0 +1,27 @@
+# Dependencias de paquetes
+node_modules/
+
+# Archivos de entorno y credenciales sensibles
+.env
+.env.local
+.env.*.local
+
+# Permitir explícitamente subir la plantilla de ejemplo
+!.env.example
+
+# Archivos de base de datos SQLite y temporales generados
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Logs del sistema
+logs/
+*.log
+npm-debug.log*
+
+# Archivos del sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
