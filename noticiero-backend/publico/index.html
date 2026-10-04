@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RubierReport</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Barra Superior con Fecha -->
+  <header class="topbar">
+    <div class="topbar-contenido">
+      <span id="fecha-hoy" class="topbar-fecha"></span>
+    </div>
+  </header>
+
+  <!-- Navegación Principal -->
+<nav class="navbar">
+  <div class="navbar-contenedor">
+    <div class="logo-area" onclick="cargarNoticias('TODAS')">
+      <img src="img/logo.png" alt="Logo RubierReport" class="logo-imagen">
+      <span class="logo-texto">RubierReport</span>
+    </div>
+
+      <!-- Categorías -->
+      <nav class="nav-categorias" id="lista-categorias">
+        <li class="cat-btn cat-activa" onclick="cambiarCategoria(this, 'TODAS')">TODAS</li>
+        <li class="cat-btn" onclick="cambiarCategoria(this, 'Internacional')">INTERNACIONAL</li>
+        <li class="cat-btn" onclick="cambiarCategoria(this, 'Política')">POLÍTICA</li>
+        <li class="cat-btn" onclick="cambiarCategoria(this, 'Economía')">ECONOMÍA</li>
+        <li class="cat-btn" onclick="cambiarCategoria(this, 'Tecnología')">TECNOLOGÍA</li>
+        <li class="cat-btn" onclick="cambiarCategoria(this, 'Ciencia')">CIENCIA</li>
+        <li class="cat-btn" onclick="cambiarCategoria(this, 'Deportes')">DEPORTES</li>
+      </nav>
+
+      <!-- Menú Interactivo de Usuario y Notificaciones -->
+      <div class="usuario-area">
+        <!-- Notificaciones Push (Lector) -->
+        <div class="notif-wrapper" id="notif-wrapper">
+          <button class="btn-icono" id="btn-notif" onclick="toggleNotificaciones()">
+            <i class="fa-regular fa-bell"></i>
+            <span class="badge-alerta" id="notif-badge">0</span>
+          </button>
+          <div class="menu-desplegable notif-panel" id="panel-notificaciones">
+            <h4>Últimas Noticias</h4>
+            <ul id="lista-notificaciones"></ul>
+          </div>
+        </div>
+
+        <!-- Menú de Usuario / Login -->
+        <div class="usuario-wrapper">
+          <button class="btn-usuario" id="btn-usuario" onclick="toggleMenuUsuario()">
+            <i class="fa-regular fa-user"></i>
+            <span id="usuario-label">Ingresar</span>
+          </button>
+
+          <!-- Desplegable según Rol -->
+          <div class="menu-desplegable usuario-panel" id="panel-usuario">
+            <div id="opciones-lector" class="panel-opciones">
+              <p class="usuario-info-rol">Perfil: <strong id="rol-actual">LECTOR</strong></p>
+              <hr>
+              <button onclick="abrirModalEditor()" id="btn-opcion-redactor" class="btn-menu-accion oculto">
+                <i class="fa-solid fa-pen-nib"></i> Crear Borrador
+              </button>
+              <button onclick="abrirPanelMisArticulos()" id="btn-opcion-mis-articulos" class="btn-menu-accion oculto">
+                <i class="fa-solid fa-list-check"></i> Mis Artículos
+              </button>
+              <button onclick="abrirPanelModeracion()" id="btn-opcion-editor" class="btn-menu-accion oculto">
+                <i class="fa-solid fa-newspaper"></i> Moderar Noticias
+              </button>
+              <button onclick="abrirPanelAdmin()" id="btn-opcion-admin" class="btn-menu-accion oculto">
+                <i class="fa-solid fa-users-gear"></i> Gestionar Roles
+              </button>
+              <button onclick="abrirPanelMetricas()" id="btn-opcion-metricas" class="btn-menu-accion oculto">
+                <i class="fa-solid fa-chart-line"></i> Métricas
+              </button>
+              <hr>
+              <button onclick="cerrarSesion()" class="btn-menu-accion btn-salir">
+                <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenedor Principal (Noticias + Sidebar) -->
+  <main class="contenedor-principal">
+    <div class="seccion-noticias">
+      <!-- Noticia Principal Destacada -->
+      <article class="noticia-destacada" id="noticia-destacada"></article>
+
+      <!-- Cuadrícula de Noticias Secundarias -->
+      <div class="grid-noticias" id="grid-noticias"></div>
+
+      <!-- Paginación de la Portada Principal (1, 2, 3...) -->
+      <div class="paginacion-panel" id="paginacion-noticias"></div>
+    </div>
+
+    <!-- Barra Lateral Reordenada RubierReport -->
+    <aside class="sidebar-lateral">
+      <!-- 1. Lo Más Leído -->
+      <div class="tarjeta-sidebar">
+        <div class="sidebar-cabecera">
+          <i class="fa-solid fa-fire-flame-curved"></i>
+          <h4>Lo Más Leído</h4>
+        </div>
+        <div class="lista-tendencias" id="lista-mas-leidas">
+          <div class="placeholder-vacio">Cargando tendencias...</div>
+        </div>
+      </div>
+
+      <!-- 2. Tarjeta Recibir Noticias / Registro -->
+      <div class="tarjeta-cta">
+        <h3>¿Quieres recibir noticias al instante?</h3>
+        <p>Mantente al día con las informaciones más relevantes de Venezuela y el mundo.</p>
+        <button class="btn-cta" onclick="abrirModalAuth('registro')">Regístrate Aquí</button>
+      </div>
+
+      <!-- 3. Medio Alternativo / Redes Oficiales -->
+      <div class="tarjeta-sidebar tarjeta-comunidad">
+        <div class="sidebar-cabecera">
+          <i class="fa-solid fa-bullhorn"></i>
+          <h4>Medio Alternativo</h4>
+        </div>
+        <p class="comunidad-desc">Sigue nuestras transmisiones e investigaciones en vivo a través de nuestros canales:</p>
+        
+        <div class="canales-grid">
+          <!-- 1. Instagram -->
+          <a href="https://www.instagram.com/roubierreport/" target="_blank" rel="noopener noreferrer" class="canal-item">
+            <i class="fa-brands fa-instagram"></i>
+            <span>Instagram</span>
+          </a>
+          <!-- 2. TikTok -->
+          <a href="#" target="_blank" rel="noopener noreferrer" class="canal-item">
+            <i class="fa-brands fa-tiktok"></i>
+            <span>TikTok</span>
+          </a>
+          <!-- 3. Facebook -->
+          <a href="#" target="_blank" rel="noopener noreferrer" class="canal-item">
+            <i class="fa-brands fa-facebook"></i>
+            <span>Facebook</span>
+          </a>
+          <!-- 4. Threads -->
+          <a href="#" target="_blank" rel="noopener noreferrer" class="canal-item">
+            <i class="fa-brands fa-threads"></i>
+            <span>Threads</span>
+          </a>
+        </div>
+        
+      </div>
+    </aside>
+  </main>
+
+  <!-- MODAL: Autenticación (Login / Registro) -->
+  <div class="modal-fondo oculto" id="modal-auth">
+    <div class="modal-caja">
+      <span class="cerrar-modal" onclick="cerrarModal('modal-auth')">&times;</span>
+      <div class="tabs-auth">
+        <button class="tab-btn activo" id="tab-login" onclick="cambiarTabAuth('login')">Iniciar Sesión</button>
+        <button class="tab-btn" id="tab-reg" onclick="cambiarTabAuth('registro')">Registro</button>
+      </div>
+
+      <!-- Formulario Login -->
+      <form id="form-login" class="form-auth" onsubmit="iniciarSesion(event)">
+        <div class="campo-grupo">
+          <label>Correo Electrónico</label>
+          <input type="email" id="login-correo" required placeholder="correo@ejemplo.com">
+        </div>
+        <div class="campo-grupo">
+          <label>Contraseña</label>
+          <input type="password" id="login-clave" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-enviar">Ingresar</button>
+      </form>
+
+      <!-- Formulario Registro -->
+      <form id="form-registro" class="form-auth oculto" onsubmit="registrarUsuario(event)">
+        <div class="campo-grupo">
+          <label>Nombre Completo</label>
+          <input type="text" id="reg-nombre" required placeholder="Tu nombre">
+        </div>
+        <div class="campo-grupo">
+          <label>Correo Electrónico</label>
+          <input type="email" id="reg-correo" required placeholder="correo@ejemplo.com">
+        </div>
+        <div class="campo-grupo">
+          <label>Contraseña</label>
+          <input type="password" id="reg-clave" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-enviar">Registrarse</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Redacción de Borrador (Redactor) -->
+  <div class="modal-fondo oculto" id="modal-borrador">
+    <div class="modal-caja modal-ancho">
+      <span class="cerrar-modal" onclick="cerrarModal('modal-borrador')">&times;</span>
+      <h3>Crear Nuevo Borrador Editorial</h3>
+      <form id="form-borrador" onsubmit="guardarBorrador(event)">
+        <div class="campo-grupo">
+          <label>Título</label>
+          <input type="text" id="art-titulo" required placeholder="Titular de la noticia">
+        </div>
+        <div class="campo-grupo">
+          <label>Categoría</label>
+          <select id="art-categoria" required>
+            <option value="Internacional">Internacional</option>
+            <option value="Política">Política</option>
+            <option value="Economía">Economía</option>
+            <option value="Tecnología">Tecnología</option>
+            <option value="Ciencia">Ciencia</option>
+            <option value="Deportes">Deportes</option>
+          </select>
+        </div>
+        <div class="campo-grupo">
+          <label>URL de Imagen de Portada</label>
+          <input type="url" id="art-imagen" placeholder="https://ejemplo.com/foto.jpg">
+        </div>
+        <div class="campo-grupo">
+          <label>Resumen Corto</label>
+          <textarea id="art-resumen" rows="2" placeholder="Breve introducción..."></textarea>
+        </div>
+        <div class="campo-grupo">
+          <label>Cuerpo del Artículo</label>
+          <textarea id="art-contenido" rows="6" required placeholder="Contenido detallado..."></textarea>
+        </div>
+        <button type="submit" class="btn-enviar">Guardar Borrador</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Moderación de Noticias (Editor) -->
+  <div class="modal-fondo oculto" id="modal-moderacion">
+    <div class="modal-caja modal-ancho">
+      <span class="cerrar-modal" onclick="cerrarModal('modal-moderacion')">&times;</span>
+      <h3>Panel de Moderación Editorial</h3>
+      <table class="tabla-panel">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Categoría</th>
+            <th>Estado Actual</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-articulos-revision"></tbody>
+      </table>
+
+      <!-- Controles de Paginación -->
+      <div class="paginacion-panel" id="paginacion-moderacion"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Gestión de Usuarios y Equipo Editorial (Admin) -->
+  <div class="modal-fondo oculto" id="modal-admin">
+    <div class="modal-caja modal-ancho">
+      <span class="cerrar-modal" onclick="cerrarModal('modal-admin')">&times;</span>
+      <h3>Gestión de Personal Editorial</h3>
+      
+      <!-- Formulario para Asignar Rol por Correo -->
+      <form id="form-asignar-personal" onsubmit="asignarRolPorCorreo(event)" class="form-gestion-rol">
+        <div class="campos-fila-admin">
+          <input type="email" id="admin-correo-asignar" placeholder="correo@ejemplo.com" required>
+          <select id="admin-nuevo-rol-select" required>
+            <option value="">Selecciona rol...</option>
+            <option value="REDACTOR">REDACTOR</option>
+            <option value="EDITOR">EDITOR</option>
+          </select>
+          <button type="submit" class="btn-asignar-admin">Asignar Cargo</button>
+        </div>
+      </form>
+
+      <h4 class="subtitulo-tabla-admin">Equipo Editorial Activo (Editores y Redactores)</h4>
+      
+      <table class="tabla-panel">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo Electrónico</th>
+            <th>Cargo Asignado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-usuarios-admin"></tbody>
+      </table>
+
+      <!-- Controles de Paginación del Personal (1, 2, 3...) -->
+      <div class="paginacion-panel" id="paginacion-personal-admin"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Métricas y Analítica (Editor / Admin) -->
+  <div class="modal-fondo oculto" id="modal-metricas">
+    <div class="modal-caja modal-ancho">
+      <span class="cerrar-modal" onclick="cerrarModal('modal-metricas')">&times;</span>
+      <h3>Panel Analítico de Audiencia</h3>
+      <table class="tabla-panel">
+        <thead>
+          <tr>
+            <th>Artículo</th>
+            <th>Categoría</th>
+            <th>Total Vistas</th>
+            <th>Permanencia Prom. (seg)</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-metricas-body"></tbody>
+      </table>
+
+      <!-- Controles de Paginación para Métricas (1, 2, 3...) -->
+      <div class="paginacion-panel" id="paginacion-metricas"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Lectura Completa de Noticia -->
+  <div class="modal-fondo oculto" id="modal-lectura">
+    <div class="modal-caja modal-ancho modal-articulo">
+      <span class="cerrar-modal" onclick="cerrarLecturaArticulo()">&times;</span>
+      
+      <div class="articulo-completo-cabecera">
+        <span class="categoria-tag" id="lectura-categoria"></span>
+        <h1 id="lectura-titulo"></h1>
+        <p class="articulo-metadatos">
+          Por <strong id="lectura-autor"></strong> | Publicado el <span id="lectura-fecha"></span>
+        </p>
+      </div>
+
+      <div class="articulo-completo-img-wrapper" id="lectura-img-contenedor">
+        <img id="lectura-imagen" src="" alt="Imagen de cabecera">
+      </div>
+
+      <div class="articulo-completo-cuerpo">
+        <p class="articulo-resumen-destacado" id="lectura-resumen"></p>
+        <div class="articulo-texto" id="lectura-contenido"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Mis Artículos y Estados (Redactor) -->
+  <div class="modal-fondo oculto" id="modal-mis-articulos">
+    <div class="modal-caja modal-ancho">
+      <span class="cerrar-modal" onclick="cerrarModal('modal-mis-articulos')">&times;</span>
+      <h3>Mis Artículos y Estado Editorial</h3>
+      <table class="tabla-panel">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Fecha</th>
+            <th>Estado Editorial</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-mis-articulos-body"></tbody>
+      </table>
+
+      <!-- Controles de Paginación para Redactor -->
+      <div class="paginacion-panel" id="paginacion-mis-articulos"></div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
