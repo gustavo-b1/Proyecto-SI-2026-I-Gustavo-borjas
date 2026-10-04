@@ -63,5 +63,5 @@ if (!existeAdmin) {
     INSERT INTO usuarios (nombre, correo, clave, rol) 
     VALUES ('Administrador', ?, ?, 'ADMINISTRADOR')
   `).run(correoAdmin, claveAdminHash);
-  console.log(`Usuario administrador por defecto creado)`);
+  console.log(`Usuario administrador por defecto creado`);
 }
