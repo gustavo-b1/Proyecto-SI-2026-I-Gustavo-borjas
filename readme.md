@@ -70,9 +70,9 @@ iniciar el servidor local: node servidor.js
 
 Credenciales predeterminadas para evaluación
 
-
-Correo: admin@admin.admin
-Contraseña: admin123
+Al iniciar el servidor por primera vez, el sistema creará automáticamente la base de datos local y registrará al usuario administrador tomando las credenciales definidas en el archivo .env ubicado en noticiero-backend\.env
+ADMIN_EMAIL
+ADMIN_PASSWORD
 
 
 Pruebas
