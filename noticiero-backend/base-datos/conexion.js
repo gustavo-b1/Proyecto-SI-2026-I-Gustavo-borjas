@@ -50,8 +50,6 @@ db.exec(`
   );
 `);
 
-module.exports = db;
-
 // Semilla: Crear administrador por defecto si no existe ninguno
 const existeAdmin = db.prepare("SELECT id FROM usuarios WHERE rol = 'ADMINISTRADOR'").get();
 if (!existeAdmin) {
@@ -65,3 +63,5 @@ if (!existeAdmin) {
   `).run(correoAdmin, claveAdminHash);
   console.log(`Usuario administrador por defecto creado`);
 }
+
+module.exports = db;
